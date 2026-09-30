@@ -1,0 +1,11 @@
+// Own drawings, no third-party assets.
+export const CARD_IMAGES = [
+  { id: 'circle', src: './img/circle.svg', alt: 'красный круг' },
+  { id: 'square', src: './img/square.svg', alt: 'синий квадрат' },
+  { id: 'triangle', src: './img/triangle.svg', alt: 'зелёный треугольник' },
+  { id: 'star', src: './img/star.svg', alt: 'жёлтая звезда' },
+  { id: 'heart', src: './img/heart.svg', alt: 'розовое сердце' },
+  { id: 'diamond', src: './img/diamond.svg', alt: 'фиолетовый ромб' },
+  { id: 'moon', src: './img/moon.svg', alt: 'оранжевая луна' },
+  { id: 'cross', src: './img/cross.svg', alt: 'бирюзовый крест' },
+];
