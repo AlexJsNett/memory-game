@@ -29,10 +29,6 @@ function updateCard(node, card, index, image) {
   node.setAttribute('aria-disabled', String(isVisible));
 }
 
-/**
- * Builds the whole UI with createElement.
- * Returns the root element and render(state) which syncs the DOM with the game state.
- */
 export function createView({ images, onNewGame, onLeaderboard, onCardClick }) {
   const imageById = new Map(images.map((image) => [image.id, image]));
 

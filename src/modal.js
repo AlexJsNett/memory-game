@@ -2,12 +2,6 @@ import { el } from './dom.js';
 
 const SCROLL_LOCK_CLASS = 'scroll-locked';
 
-/**
- * Shared modal shell for every dialog in the app.
- * Content is passed to open(); the shell only knows how to show and hide it.
- * Escape and backdrop click close the dialog, cleanup runs in the "close" event
- * so it also works for the native Escape handling of <dialog>.
- */
 export function createModal() {
   const content = el('div', { className: 'modal__content' });
   const dialog = el('dialog', { className: 'modal' }, content);
@@ -39,7 +33,6 @@ export function createModal() {
   return { element: dialog, open, close };
 }
 
-/** Builds content shared by all modals: title, body and a row of buttons. */
 export function createModalContent({ title, body, actions }) {
   return el(
     'div',
