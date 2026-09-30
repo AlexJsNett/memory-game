@@ -3,11 +3,10 @@ export const MISMATCH_DELAY = 1000;
 
 export const STATUS = {
   PLAYING: 'playing',
-  CHECKING: 'checking', // mismatched pair is visible, board is locked
+  CHECKING: 'checking',
   WON: 'won',
 };
 
-/** Fisher-Yates shuffle, returns a new array. */
 export function shuffle(items) {
   const result = [...items];
   for (let i = result.length - 1; i > 0; i -= 1) {
@@ -27,11 +26,6 @@ function buildDeck(images) {
   }));
 }
 
-/**
- * Game logic without any DOM.
- * onChange(state) is called after every state change,
- * onWin(moves) once when the last pair is found.
- */
 export function createGame({ images, onChange, onWin, delay = MISMATCH_DELAY }) {
   let state;
   let firstIndex = null;
@@ -58,7 +52,7 @@ export function createGame({ images, onChange, onWin, delay = MISMATCH_DELAY }) 
   }
 
   function closeMismatch(id, indexes) {
-    if (id !== gameId) return; // stale timer from a previous game
+    if (id !== gameId) return;
     for (const index of indexes) {
       state.cards[index].isOpen = false;
     }

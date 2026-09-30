@@ -34,7 +34,6 @@ body.scroll-locked {
   padding: 16px;
 }
 
-/* header */
 .header {
   display: flex;
   flex-wrap: wrap;
@@ -86,7 +85,6 @@ body.scroll-locked {
   outline-offset: 2px;
 }
 
-/* stats */
 .stats {
   display: flex;
   justify-content: space-between;
@@ -109,7 +107,6 @@ body.scroll-locked {
   color: var(--text);
 }
 
-/* board */
 .board {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -187,7 +184,6 @@ body.scroll-locked {
   border-color: var(--matched);
 }
 
-/* modal */
 .modal {
   width: min(92vw, 420px);
   padding: 0;
@@ -250,4 +246,10 @@ body.scroll-locked {
   .app {
     padding: 10px;
   }
+}
+
+.app-error {
+  margin: 24px 16px;
+  color: #b3261e;
+  text-align: center;
 }

@@ -1,7 +1,3 @@
-/**
- * Thin wrapper over document.createElement.
- * options: className, text, attrs, dataset, on (event -> handler)
- */
 export function el(tag, options = {}, ...children) {
   const { className, text, attrs, dataset, on } = options;
   const node = document.createElement(tag);
