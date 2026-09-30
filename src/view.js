@@ -1,7 +1,6 @@
 import { el } from './dom.js';
 import { PAIRS_TOTAL, STATUS } from './game.js';
 
-
 function createCard(card, index, image) {
   return el(
     'button',
