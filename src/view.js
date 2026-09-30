@@ -29,7 +29,14 @@ function updateCard(node, card, index, image) {
   node.setAttribute('aria-disabled', String(isVisible));
 }
 
-export function createView({ images, onNewGame, onLeaderboard, onCardClick }) {
+export function createView({
+  images,
+  playerName,
+  onPlayerNameChange,
+  onNewGame,
+  onLeaderboard,
+  onCardClick,
+}) {
   const imageById = new Map(images.map((image) => [image.id, image]));
 
   const movesValue = el('span', { className: 'stats__value', text: '0' });
@@ -42,6 +49,23 @@ export function createView({ images, onNewGame, onLeaderboard, onCardClick }) {
     if (cardNode) onCardClick(Number(cardNode.dataset.index));
   });
 
+  const nameInput = el('input', {
+    className: 'header__input',
+    attrs: {
+      type: 'text',
+      maxlength: '20',
+      placeholder: 'Ваше имя',
+      autocomplete: 'off',
+      value: playerName,
+    },
+    on: {
+      input: (event) => onPlayerNameChange(event.target.value),
+      keydown: (event) => {
+        if (event.key === 'Enter') event.target.blur();
+      },
+    },
+  });
+
   const root = el(
     'div',
     { className: 'app' },
@@ -49,6 +73,12 @@ export function createView({ images, onNewGame, onLeaderboard, onCardClick }) {
       'header',
       { className: 'header' },
       el('h1', { className: 'header__title', text: 'Memory Game' }),
+      el(
+        'label',
+        { className: 'header__player' },
+        el('span', { className: 'header__label', text: 'Игрок' }),
+        nameInput,
+      ),
       el(
         'div',
         { className: 'header__buttons' },

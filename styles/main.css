@@ -48,6 +48,36 @@ body.scroll-locked {
   font-size: 1.5rem;
 }
 
+.header__player {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 200px;
+}
+
+.header__label {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.header__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+}
+
+.header__input:focus-visible {
+  border-color: var(--accent);
+  outline: 3px solid #ffb000;
+  outline-offset: 2px;
+}
+
 .header__buttons {
   display: flex;
   flex-wrap: wrap;
@@ -185,7 +215,8 @@ body.scroll-locked {
 }
 
 .modal {
-  width: min(92vw, 420px);
+  width: min(92vw, 480px);
+  max-height: 90vh;
   padding: 0;
   color: var(--text);
   background: var(--surface);
@@ -236,6 +267,20 @@ body.scroll-locked {
 .results th {
   color: var(--muted);
   font-size: 0.85rem;
+}
+
+.results td {
+  overflow-wrap: anywhere;
+}
+
+.results tr.is-current td {
+  font-weight: 700;
+  background: #ece8ff;
+}
+
+.modal__subtitle {
+  margin: 20px 0 8px;
+  font-size: 1.05rem;
 }
 
 @media (max-width: 380px) {

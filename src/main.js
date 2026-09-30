@@ -3,11 +3,19 @@ import { el } from './dom.js';
 import { createGame } from './game.js';
 import { createModal } from './modal.js';
 import { createLeaderboardContent, createWinContent } from './screens.js';
-import { loadResults, saveResult } from './storage.js';
+import {
+  loadPlayerName,
+  loadPlayerStats,
+  loadResults,
+  normalizeName,
+  savePlayerName,
+  saveResult,
+} from './storage.js';
 import { createView } from './view.js';
 
 function start(images) {
   const modal = createModal();
+  let playerName = loadPlayerName();
 
   function startNewGame() {
     modal.close();
@@ -15,16 +23,33 @@ function start(images) {
   }
 
   function showWin(moves) {
-    saveResult(moves);
-    modal.open(createWinContent({ moves, onNewGame: startNewGame, onClose: modal.close }));
+    const name = normalizeName(playerName);
+    saveResult({ moves, name });
+    modal.open(
+      createWinContent({ moves, playerName: name, onNewGame: startNewGame, onClose: modal.close }),
+    );
   }
 
   function showLeaderboard() {
-    modal.open(createLeaderboardContent({ results: loadResults(), onClose: modal.close }));
+    modal.open(
+      createLeaderboardContent({
+        results: loadResults(),
+        players: loadPlayerStats(),
+        currentName: playerName,
+        onClose: modal.close,
+      }),
+    );
+  }
+
+  function changePlayerName(value) {
+    playerName = value;
+    savePlayerName(value);
   }
 
   const view = createView({
     images,
+    playerName,
+    onPlayerNameChange: changePlayerName,
     onNewGame: startNewGame,
     onLeaderboard: showLeaderboard,
     onCardClick: (index) => game.flip(index),
