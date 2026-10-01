@@ -69,7 +69,7 @@ test('mismatch locks board and closes after delay', async () => {
   const [a, b] = findMismatch(get().cards);
   game.flip(a);
   game.flip(b);
-  assert.equal(get().status, STATUS.CHECKING);
+  assert.equal(get().status, STATUS.LOCKED_BY_MISMATCH);
   assert.equal(get().moves, 1);
 
   const other = get().cards.findIndex((c, i) => i !== a && i !== b);

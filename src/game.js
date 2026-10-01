@@ -3,7 +3,7 @@ export const MISMATCH_DELAY = 1000;
 
 export const STATUS = {
   PLAYING: 'playing',
-  CHECKING: 'checking',
+  LOCKED_BY_MISMATCH: 'locked-by-mismatch',
   WON: 'won',
 };
 
@@ -18,8 +18,7 @@ export function shuffle(items) {
 
 function buildDeck(images) {
   const pairs = images.flatMap((image) => [image, image]);
-  return shuffle(pairs).map((image, index) => ({
-    uid: index,
+  return shuffle(pairs).map((image) => ({
     imageId: image.id,
     isOpen: false,
     isMatched: false,
@@ -51,13 +50,38 @@ export function createGame({ images, onChange, onWin, delay = MISMATCH_DELAY }) 
     emit();
   }
 
-  function closeMismatch(id, indexes) {
-    if (id !== gameId) return;
+  function isStaleTimer(timerGameId) {
+    return timerGameId !== gameId;
+  }
+
+  function closeMismatch(timerGameId, indexes) {
+    if (isStaleTimer(timerGameId)) return;
     for (const index of indexes) {
       state.cards[index].isOpen = false;
     }
     timerId = null;
     state.status = STATUS.PLAYING;
+    emit();
+  }
+
+  function registerMatch(first, second) {
+    first.isMatched = true;
+    second.isMatched = true;
+    state.pairs += 1;
+
+    if (state.pairs === PAIRS_TOTAL) {
+      state.status = STATUS.WON;
+      emit();
+      onWin(state.moves);
+      return;
+    }
+    emit();
+  }
+
+  function lockUntilMismatchCloses(indexes) {
+    state.status = STATUS.LOCKED_BY_MISMATCH;
+    const timerGameId = gameId;
+    timerId = setTimeout(() => closeMismatch(timerGameId, indexes), delay);
     emit();
   }
 
@@ -80,24 +104,10 @@ export function createGame({ images, onChange, onWin, delay = MISMATCH_DELAY }) 
     state.moves += 1;
 
     if (first.imageId === card.imageId) {
-      first.isMatched = true;
-      card.isMatched = true;
-      state.pairs += 1;
-
-      if (state.pairs === PAIRS_TOTAL) {
-        state.status = STATUS.WON;
-        emit();
-        onWin(state.moves);
-        return;
-      }
-      emit();
-      return;
+      registerMatch(first, card);
+    } else {
+      lockUntilMismatchCloses(pair);
     }
-
-    state.status = STATUS.CHECKING;
-    const id = gameId;
-    timerId = setTimeout(() => closeMismatch(id, pair), delay);
-    emit();
   }
 
   return { newGame, flip };
