@@ -32,6 +32,7 @@ function updateCard(node, card, index, image) {
 export function createView({
   images,
   playerName,
+  maxNameLength,
   onPlayerNameChange,
   onNewGame,
   onLeaderboard,
@@ -53,7 +54,7 @@ export function createView({
     className: 'header__input',
     attrs: {
       type: 'text',
-      maxlength: '20',
+      maxlength: String(maxNameLength),
       placeholder: 'Ваше имя',
       autocomplete: 'off',
       value: playerName,
@@ -109,21 +110,30 @@ export function createView({
     ),
   );
 
-  function render(state) {
-    if (renderedGameId !== state.gameId) {
-      board.replaceChildren(
-        ...state.cards.map((card, index) => createCard(card, index, imageById.get(card.imageId))),
-      );
-      renderedGameId = state.gameId;
-    }
+  function rebuildBoard(state) {
+    board.replaceChildren(
+      ...state.cards.map((card, index) => createCard(card, index, imageById.get(card.imageId))),
+    );
+    renderedGameId = state.gameId;
+  }
 
+  function syncCards(state) {
     state.cards.forEach((card, index) => {
       updateCard(board.children[index], card, index, imageById.get(card.imageId));
     });
-
     board.classList.toggle('is-locked', state.status !== STATUS.PLAYING);
+  }
+
+  function syncStats(state) {
     movesValue.textContent = String(state.moves);
     pairsValue.textContent = `${state.pairs} из ${PAIRS_TOTAL}`;
+  }
+
+  function render(state) {
+    const isNewGame = renderedGameId !== state.gameId;
+    if (isNewGame) rebuildBoard(state);
+    syncCards(state);
+    syncStats(state);
   }
 
   return { element: root, render };

@@ -4,6 +4,7 @@ import { createGame } from './game.js';
 import { createModal } from './modal.js';
 import { createLeaderboardContent, createWinContent } from './screens.js';
 import {
+  MAX_NAME_LENGTH,
   loadPlayerName,
   loadPlayerStats,
   loadResults,
@@ -16,18 +17,23 @@ import { createView } from './view.js';
 function start(images) {
   const modal = createModal();
   let playerName = loadPlayerName();
+  let game;
 
   function startNewGame() {
     modal.close();
     game.newGame();
   }
 
-  function showWin(moves) {
-    const name = normalizeName(playerName);
-    saveResult({ moves, name });
+  function showWinModal(moves, name) {
     modal.open(
       createWinContent({ moves, playerName: name, onNewGame: startNewGame, onClose: modal.close }),
     );
+  }
+
+  function handleWin(moves) {
+    const name = normalizeName(playerName);
+    saveResult({ moves, name });
+    showWinModal(moves, name);
   }
 
   function showLeaderboard() {
@@ -49,16 +55,17 @@ function start(images) {
   const view = createView({
     images,
     playerName,
+    maxNameLength: MAX_NAME_LENGTH,
     onPlayerNameChange: changePlayerName,
     onNewGame: startNewGame,
     onLeaderboard: showLeaderboard,
     onCardClick: (index) => game.flip(index),
   });
 
-  const game = createGame({
+  game = createGame({
     images,
     onChange: view.render,
-    onWin: showWin,
+    onWin: handleWin,
   });
 
   document.body.append(view.element, modal.element);
